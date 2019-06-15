@@ -1,0 +1,64 @@
+<div id="container">
+  <mat-grid-list cols="13">
+    <mat-grid-tile colspan="6">
+      <mat-form-field>
+        <mat-label>Base amount</mat-label>
+        <input matInput [type]="'number'" [value]="currentBaseAmount" (blur)="updateBaseAmount($event.target.value)">
+      </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="1">
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="6">
+      <mat-form-field>
+        <mat-label>Base currency</mat-label>
+        <mat-select [(value)]="selectedBaseCurrency">
+          <mat-option *ngFor="let item of availableBaseCurrencies"
+                      (onSelectionChange)="selectBasedCurrency($event.source.value)"
+                      [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <span *ngIf="selectedCounterCurrency" class="mat-display-1">1 {{selectedBaseCurrency}} equals
+    {{basedConversionRates[selectedCounterCurrency] | formatNumber}}
+    {{selectedCounterCurrency}}
+  </span>
+
+  <mat-grid-list cols="13">
+    <mat-grid-tile colspan="6">
+      <mat-form-field>
+        <mat-label>Counter amount</mat-label>
+        <input matInput [type]="'number'" [value]="currentCounterAmount" (blur)="updateCounterAmount($event.target.value)">
+      </mat-form-field>
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="1">
+    </mat-grid-tile>
+
+    <mat-grid-tile colspan="6">
+      <mat-form-field>
+        <mat-label>Counter currency</mat-label>
+        <mat-select [(value)]="selectedCounterCurrency">
+          <mat-option *ngFor="let item of counterCurrencyNames"
+                      [value]="item">
+            {{item}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </mat-grid-tile>
+  </mat-grid-list>
+
+
+      <app-currency-chart *ngIf="selectedCounterCurrency"
+                          [base]="selectedBaseCurrency"
+                          [counter]="selectedCounterCurrency"></app-currency-chart>
+</div>
+
+
