@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import Chart from 'chart.js';
 import * as moment from 'moment';
 import {HttpClient} from '@angular/common/http';
@@ -10,29 +10,50 @@ const apiUrl = 'https://api.exchangeratesapi.io/history';
   templateUrl: './currency-chart.component.html',
   styleUrls: ['./currency-chart.component.css']
 })
-export class CurrencyChartComponent implements OnInit {
+export class CurrencyChartComponent {
 
-  @Input() base: any;
-  @Input() counter: any;
+  @Input()
+  set base(base: string) {
+    this._base = base;
+    setTimeout(() => this.clickAvatar('5D'));
+  }
+
+  get base() {
+    return this._base;
+  }
+
+  @Input()
+  set counter(counter: string) {
+    this._counter = counter;
+    setTimeout(() => this.clickAvatar('5D'));
+  }
+
+  get counter() {
+    return this._counter;
+  }
+
+  constructor(private http: HttpClient) {
+  }
+
+  private _base: string;
+  private _counter: string;
 
   filters = ['5D', '15D', '1M'];
   data = {};
   selectedPeriod = '';
 
-  constructor(private http: HttpClient) { }
-
-  ngOnInit() {
-    this.clickAvatar('5D');
+  static buildUrl(base, counter, start, end) {
+    return apiUrl + `?start_at=${end}&end_at=${start}&base=${base}&symbols=${counter}`;
   }
 
   displayLineChart() {
     const currencyChart = document.getElementById('currencyChart');
-    const c = new Chart(currencyChart, {
+    const chart = new Chart(currencyChart, {
       type: 'line',
       data: {
         labels: Object.keys(this.data),
         datasets: [{
-          label: `${this.counter} rate relative to ${this.base}`,
+          label: `Currency rates`,
           data: Object.values(this.data).map(item => item[this.counter])
         }]
       },
@@ -46,10 +67,7 @@ export class CurrencyChartComponent implements OnInit {
         }
       }
     });
-  }
-
-  buildUrl(base, counter, start, end) {
-    return apiUrl + `?start_at=${end}&end_at=${start}&base=${base}&symbols=${counter}`;
+    console.log('Chart: ', chart);
   }
 
   clickAvatar(value) {
@@ -72,7 +90,7 @@ export class CurrencyChartComponent implements OnInit {
         break;
       }
     }
-    this.getHistory(this.buildUrl(this.base, this.counter, startDate, endDate));
+    this.getHistory(CurrencyChartComponent.buildUrl(this.base, this.counter, startDate, endDate));
     this.selectedPeriod = value;
   }
 
@@ -83,5 +101,4 @@ export class CurrencyChartComponent implements OnInit {
       this.displayLineChart();
     });
   }
-
 }

@@ -1,9 +1,12 @@
 <div id="container" style="height: 450px; width: 650px;">
   <mat-divider></mat-divider>
-    <button mat-icon-button [disabled]="selectedPeriod === filter" (click)="clickAvatar($event.target.innerText)"
-               *ngFor="let filter of filters"
-               class="md-icon-button">
-      {{filter}}
-    </button>
+  <button mat-icon-button
+          class="md-icon-button"
+          *ngFor="let filter of filters"
+          [disabled]="selectedPeriod === filter"
+          (click)="clickAvatar($event.target.innerText)">
+    {{filter}}
+  </button>
+  <br>{{counter}} rate relative to {{base}}
   <canvas id="currencyChart" height="350" width="600"></canvas>
 </div>

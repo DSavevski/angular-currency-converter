@@ -3,7 +3,11 @@
     <mat-grid-tile colspan="6">
       <mat-form-field>
         <mat-label>Base amount</mat-label>
-        <input matInput [type]="'number'" [value]="currentBaseAmount" (blur)="updateBaseAmount($event.target.value)">
+        <label>
+          <input matInput [type]="'number'"
+                 [value]="currentBaseAmount | formatNumber"
+                 (input)="updateBaseAmount($event.target.value)">
+        </label>
       </mat-form-field>
     </mat-grid-tile>
 
@@ -25,7 +29,8 @@
     </mat-grid-tile>
   </mat-grid-list>
 
-  <span *ngIf="selectedCounterCurrency" class="mat-display-1">1 {{selectedBaseCurrency}} equals
+  <span *ngIf="selectedCounterCurrency" class="mat-display-1">
+    1 {{selectedBaseCurrency}} equals
     {{basedConversionRates[selectedCounterCurrency] | formatNumber}}
     {{selectedCounterCurrency}}
   </span>
@@ -34,7 +39,11 @@
     <mat-grid-tile colspan="6">
       <mat-form-field>
         <mat-label>Counter amount</mat-label>
-        <input matInput [type]="'number'" [value]="currentCounterAmount" (blur)="updateCounterAmount($event.target.value)">
+        <label>
+          <input matInput [type]="'number'"
+                 [value]="currentCounterAmount | formatNumber"
+                 (input)="updateCounterAmount($event.target.value)">
+        </label>
       </mat-form-field>
     </mat-grid-tile>
 
@@ -55,10 +64,9 @@
     </mat-grid-tile>
   </mat-grid-list>
 
-
-      <app-currency-chart *ngIf="selectedCounterCurrency"
-                          [base]="selectedBaseCurrency"
-                          [counter]="selectedCounterCurrency"></app-currency-chart>
+  <app-currency-chart *ngIf="selectedCounterCurrency"
+                      [counter]="selectedCounterCurrency"
+                      [base]="selectedBaseCurrency"></app-currency-chart>
 </div>
 
 

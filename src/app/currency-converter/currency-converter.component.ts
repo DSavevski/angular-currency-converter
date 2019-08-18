@@ -47,29 +47,28 @@ export class CurrencyConverterComponent implements OnInit {
 
   selectedBaseCurrency = 'EUR';
   currentBaseAmount = 0;
-  selectedCounterCurrency = 'USD';
-  counterCurrencyNames = [];
+
+  selectedCounterCurrency;
   currentCounterAmount = 0;
+
+  counterCurrencyNames = [];
+
   basedConversionRates = {};
-  availableBaseCurrencies = [];
+
+  availableBaseCurrencies = availableCurrencies;
 
   constructor(private http: HttpClient) {
   }
 
   ngOnInit() {
-    this.availableBaseCurrencies = availableCurrencies;
     this.getBasedCurrency(this.selectedBaseCurrency);
-    // this.selectedCounterCurrency = this.selectedBaseCurrency === 'EUR' ? 'USD' : 'EUR';
   }
 
   selectBasedCurrency(value) {
-    console.log(value);
-    this.selectedCounterCurrency = value === 'EUR' ? 'USD' : 'EUR';
     this.getBasedCurrency(value);
   }
 
   updateBaseAmount(value) {
-    console.log(value);
     this.currentBaseAmount = value;
     this.currentCounterAmount = this.currentBaseAmount * this.basedConversionRates[this.selectedCounterCurrency];
   }
@@ -79,14 +78,13 @@ export class CurrencyConverterComponent implements OnInit {
     this.currentBaseAmount = this.currentCounterAmount / this.basedConversionRates[this.selectedCounterCurrency];
   }
 
-  getBasedCurrency(base) {
+  private getBasedCurrency(base) {
     const url = `https://api.exchangeratesapi.io/latest?base=${base}`;
-    const result = this.http.get(url);
-    result.subscribe((data: any) => {
+    this.http.get(url).subscribe((data: any) => {
       this.basedConversionRates = data['rates'];
       this.counterCurrencyNames = Object.keys(data['rates']);
       this.updateBaseAmount(this.currentBaseAmount);
+      this.selectedCounterCurrency = this.counterCurrencyNames[0];
     });
   }
-
 }
